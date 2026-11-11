@@ -1,16 +1,32 @@
-let palabra = prompt("ingresa la palabra")
-let contador = 0;
-let palabra2 = prompt("ingresa palabra")
-let copia = palabra.toLowerCase()
-let copia2 = palabra2.toLowerCase()
+function contarVocales(txt) {
+    let limpio = txt.toLowerCase();//convierte todo a minusculas
+    
+    let vocales = limpio.split("").filter(letra => "aeiouáéíóúü".includes(letra));  // Incluimos las vocales con acento 
+    
+    return vocales.length;//devuelve el numero de vocales que le diste a la funcion
 
-for(let i = 0; i < 4; i++)
+}
+
+console.log(contarVocales("Murciélago"));
+console.log(contarVocales("PRÓXIMO"));    
     
 
+function esPalindromo(txt) {
+    let limpio = txt.toLowerCase().replaceAll(" ", ""); //convierte a minusculas y quita espacios
+    
+    // Cambia vocales con acento a vocales normales
+    limpio = limpio
+        .replace(/[áäà]/g, "a")
+        .replace(/[éëè]/g, "e")
+        .replace(/[íïì]/g, "i")
+        .replace(/[óöò]/g, "o")
+        .replace(/[úüù]/g, "u");
+    
+    // invierte el texto
+    let invertido = limpio.split("").reverse().join("");
+    
+    return limpio === invertido;} //compara
 
 
-
-
-
-console.log(copia);
-console.log(copia2);
+console.log(esPalindromo("Anita lava la tina"));
+console.log(esPalindromo("Hola mundo"));         
