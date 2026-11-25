@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trivia de perfumes para hombre</title>
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #101827, #263a55);
+      color: #f5f7fa;
+      font-family: Arial, sans-serif;
+    }
+
+    .tarjeta {
+      width: 90%;
+      max-width: 550px;
+      padding: 32px;
+      border-radius: 20px;
+      background: #ffffff;
+      color: #202b3c;
+      box-shadow: 0 15px 40px #0005;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 0;
+      color: #18263b;
+    }
+
+    p {
+      color: #667085;
+    }
+
+    .menu {
+      display: grid;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    button {
+      padding: 13px 18px;
+      border: 0;
+      border-radius: 10px;
+      background: #e9edf4;
+      color: #24344d;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      background: #dce4ef;
+    }
+
+    .principal {
+      background: #c49a54;
+      color: white;
+    }
+
+    .principal:hover {
+      background: #ae8542;
+    }
+
+    .opciones {
+      display: grid;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .volver {
+      margin-top: 12px;
+      background: transparent;
+      color: #667085;
+    }
+
+    @media (max-width: 500px) {
+      .tarjeta {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="tarjeta">
+    <h1>Fragancia & Trivia</h1>
+    <p>¿Cuánto sabes sobre perfumes para hombre?</p>
+
+    <section id="menu" class="menu">
+      <button class="principal" onclick="jugar()">Jugar</button>
+      <button onclick="verPuntaje()">Ver Puntaje</button>
+      <button onclick="agregarPregunta()">Agregar preguntas</button>
+      <button onclick="salir()">Salir</button>
+    </section>
+
+    <section id="juego"></section>
+  </main>
+
+  <script>
+    const preguntas = [
+      {
+        texto: "¿Cuál de estos perfumes es de la marca Dior?",
+        opciones: ["Acqua di Giò", "Sauvage", "Eros", "Le Male"],
+        respuesta: 1
+      },
+      {
+        texto: "¿Qué marca creó el perfume Bleu de Chanel?",
+        opciones: ["Chanel", "Prada", "Paco Rabanne", "Versace"],
+        respuesta: 0
+      },
+      {
+        texto: "¿Cuál de estos perfumes pertenece a Giorgio Armani?",
+        opciones: ["One Million", "Acqua di Giò", "Invictus", "Terre d’Hermès"],
+        respuesta: 1
+      }
+    ];
+
+    let puntaje = 0;
+    let preguntaActual = 0;
+    let mejorPuntaje = 0;
+
+    const juego = document.getElementById("juego");
+
+    function jugar() {
+      puntaje = 0;
+      preguntaActual = 0;
+      mostrarPregunta();
+    }
+
+    function mostrarPregunta() {
+      if (preguntaActual >= preguntas.length) {
+        if (puntaje > mejorPuntaje) {
+          mejorPuntaje = puntaje;
+        }
+
+        juego.innerHTML = `
+          <h2>¡Terminaste!</h2>
+          <p>Tu puntaje: <strong>${puntaje} de ${preguntas.length}</strong></p>
+          <button class="principal" onclick="jugar()">Jugar otra vez</button>
+          <button class="volver" onclick="volverAlMenu()">Volver al menú</button>
+        `;
+        return;
+      }
+
+      const pregunta = preguntas[preguntaActual];
+
+      juego.innerHTML = `
+        <p>Pregunta ${preguntaActual + 1} de ${preguntas.length}</p>
+        <h2>${pregunta.texto}</h2>
+        <div class="opciones">
+          ${pregunta.opciones.map((opcion, indice) => `
+            <button onclick="responder(${indice})">${opcion}</button>
+          `).join("")}
+        </div>
+        <button class="volver" onclick="volverAlMenu()">Volver al menú</button>
+      `;
+    }
+
+    function responder(opcionElegida) {
+      if (opcionElegida === preguntas[preguntaActual].respuesta) {
+        puntaje++;
+        alert("¡Correcto!");
+      } else {
+        alert("Incorrecto. ¡Sigue intentando!");
+      }
+
+      preguntaActual++;
+      mostrarPregunta();
+    }
+
+    function verPuntaje() {
+      juego.innerHTML = `
+        <h2>Tu mejor puntaje</h2>
+        <p>${mejorPuntaje} puntos</p>
+        <button class="volver" onclick="volverAlMenu()">Volver al menú</button>
+      `;
+    }
+
+    function agregarPregunta() {
+      const texto = prompt("Escribe la pregunta:");
+      if (!texto) return;
+
+      const opciones = [
+        prompt("Escribe la opción 1:"),
+        prompt("Escribe la opción 2:"),
+        prompt("Escribe la opción 3:"),
+        prompt("Escribe la opción 4:")
+      ];
+
+      const respuesta = Number(prompt("¿Qué opción es correcta? (1, 2, 3 o 4)"));
+
+      if (opciones.some(opcion => !opcion) || respuesta < 1 || respuesta > 4) {
+        alert("No se agregó. Revisa las opciones y la respuesta correcta.");
+        return;
+      }
+
+      preguntas.push({
+        texto,
+        opciones,
+        respuesta: respuesta - 1
+      });
+
+      alert("¡Pregunta agregada!");
+    }
+
+    function volverAlMenu() {
+      juego.innerHTML = "";
+    }
+
+    function salir() {
+      document.getElementById("menu").innerHTML = "";
+      juego.innerHTML = "<h2>¡Gracias por jugar!</h2>";
+    }
+  </script>
+
+</body>
+</html>
